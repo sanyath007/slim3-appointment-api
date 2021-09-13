@@ -16,13 +16,13 @@ class DashboardController extends Controller
                 COUNT(case when (patient in (
                     select id from patients where date(created_at) between ? and ?)
                 ) then id end) as newcase
-                FROM admit_appointments
-                WHERE (admdate between ? and ?) ";
+                FROM appointments
+                WHERE (appoint_date between ? and ?) ";
         
-        $sqlMax = "SELECT admdate, COUNT(id) as amt
-                FROM admit_appointments
-                WHERE (admdate between ? and ?)
-                GROUP BY admdate
+        $sqlMax = "SELECT appoint_date, COUNT(id) as amt
+                FROM appointments
+                WHERE (appoint_date between ? and ?)
+                GROUP BY appoint_date
                 ORDER BY count(id) desc LIMIT 1;";
 
         return $res->withJson([
@@ -36,10 +36,10 @@ class DashboardController extends Controller
         $sdate = $args['month']. '-01';
         $edate = date("Y-m-t", strtotime($sdate));
 
-        $sql="SELECT CAST(DAY(admdate) AS SIGNED) AS d, COUNT(DISTINCT id) as amt
-                FROM admit_appointments WHERE (admdate between ? and ?)
-                GROUP BY CAST(DAY(admdate) AS SIGNED) 
-                ORDER BY CAST(DAY(admdate) AS SIGNED);";
+        $sql="SELECT CAST(DAY(appoint_date) AS SIGNED) AS d, COUNT(DISTINCT id) as amt
+                FROM appointments WHERE (appoint_date between ? and ?)
+                GROUP BY CAST(DAY(appoint_date) AS SIGNED) 
+                ORDER BY CAST(DAY(appoint_date) AS SIGNED);";
 
         return $res->withJson(DB::select($sql, [$sdate, $edate]));
     }
@@ -50,8 +50,8 @@ class DashboardController extends Controller
         $edate = date("Y-m-t", strtotime($sdate));
 
         $sql="SELECT cl.clinic_name, count(a.id) as amt
-                FROM appointment_online_db.appointments a
-                left join appointment_online_db.clinics cl on (a.clinic=cl.id)
+                FROM appointments a
+                left join clinics cl on (a.clinic=cl.id)
                 WHERE (a.appoint_date between ? and ?)
                 group by a.clinic, cl.clinic_name
                 order by a.clinic;";
