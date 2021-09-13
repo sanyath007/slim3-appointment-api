@@ -10,7 +10,7 @@ class DashboardController extends Controller
     public function getStatCard($req, $res, $args)
     {
         $sdate = $args['month']. '-01';
-        $edate = $args['month']. '-31';
+        $edate = date("Y-m-t", strtotime($sdate));
 
         $sqlCount = "SELECT COUNT(id) as totalcase,
                 COUNT(case when (patient in (
@@ -34,7 +34,7 @@ class DashboardController extends Controller
     public function getAppointPerDay($req, $res, $args)
     {
         $sdate = $args['month']. '-01';
-        $edate = $args['month']. '-31';
+        $edate = date("Y-m-t", strtotime($sdate));
 
         $sql="SELECT CAST(DAY(admdate) AS SIGNED) AS d, COUNT(DISTINCT id) as amt
                 FROM admit_appointments WHERE (admdate between ? and ?)
@@ -47,7 +47,7 @@ class DashboardController extends Controller
     public function getAppointByClinic($req, $res, $args)
     {
         $sdate = $args['month']. '-01';
-        $edate = $args['month']. '-31';
+        $edate = date("Y-m-t", strtotime($sdate));
 
         $sql="SELECT cl.clinic_name, count(a.id) as amt
                 FROM appointment_online_db.appointments a
