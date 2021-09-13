@@ -34,76 +34,32 @@ class HPatientController extends Controller
 
     public function getByCid($request, $response, $args)
     {
-        // $sql = "SELECT top (1) bh.useDrg,ph.pay_typedes,
-		// 	CAST(CAST(substring(bh.rigthDate, 1, 4) AS int) - 543 AS varchar(4)) + '-' + substring(bh.rigthDate, 5, 2) + '-' + substring(bh.rigthDate, 7, 2) AS rigthDateNew,
-		// 	ltrim(rtrim(pt.hn)) AS hn,
-		// 	case when len(ps.CardID)>13 then ( substring(ps.CardID,1,1)+substring(ps.CardID,3,4)+substring(ps.CardID,8,5)+substring(ps.CardID,14,2)+substring(ps.CardID,17,1)) else ps.CardID end AS CardID,
-		// 	rtrim(ltrim(c.titleName))+rtrim(ltrim(pt.firstName))+'  '+rtrim(ltrim(pt.lastName)) AS ptName, pt.sex,
-		// 	CAST(CAST(substring(pt.birthDay, 1, 4) AS int) - 543 AS varchar(4)) + '-' + substring(pt.birthDay, 5, 2) + '-' + substring(pt.birthDay, 7, 2) AS birthDay,
-		// 	substring(CAST(CAST(CAST(CONVERT(varchar(8), GETDATE(), 112) AS int) + 5430000 AS int) AS char(8)), 1, 4) - CAST(substring(pt.birthDay, 1, 4) AS int) AS Age,
-		// 	ltrim(rtrim(pt.addr1)) AS addrNum,
-		// 	ltrim(rtrim(pt.moo)) AS addrMoo,
-		// 	ltrim(rtrim(pt.addr2)) AS addrTown,
-		// 	ltrim(rtrim(n.tambonName)) AS tumbon,
-		// 	ltrim(rtrim(m.regionName)) AS aumper,
-		// 	ltrim(rtrim(a.areaName)) AS province,pt.phone
-		// 	FROM  PATIENT pt with(nolock) 
-		// 	left join PTITLE c with (nolock) on (pt.titleCode=c.titleCode)
-		// 	left join PatSS ps with (nolock) on (pt.hn=ps.hn)
-		// 	left join Bill_h bh with (nolock) on (pt.hn=bh.hn)
-		// 	left join Paytype ph with (nolock) on (bh.useDrg=ph.pay_typecode)
-		// 	left join AREA a with(nolock) on (pt.areaCode=a.areaCode)
-		// 	left join REGION m with(nolock) on (pt.regionCode =m.regionCode)  
-		// 	left join Tambon n with(nolock) on (n.tambonCode=pt.regionCode+pt.tambonCode)
-		// 	WHERE $strSearch_strlen
-		// 	order by rigthDateNew desc";
-
-        // $homc_result=odbc_exec($connHOMC,$sql);
-        // $recHOMC=odbc_fetch_array($homc_result);
-
-        // $useDrg = $recHOMC['useDrg'] ;
-        // $pay_typedes = $recHOMC['pay_typedes'] ;
-        // $phone = $recHOMC['phone'] ;
-        // $addr_num = $recHOMC['addrNum'] ;
-        // $addr_moo = $recHOMC['addrMoo'] ;
-        // $addr_town = $recHOMC['addrTown'] ;
-        // $tumbon = $recHOMC['tumbon'] ;
-        // $aumper = $recHOMC['aumper'] ;
-        // $province = $recHOMC['province'] ;
-        // $birthDay = $recHOMC['birthDay'] ;
-        // $sex = $recHOMC['sex'] ;
-        // $arrYear=split("-",$recHOMC['birthDay']);
-        // for($ii=1; $ii<=count($arrYear); $ii++){
-        //     $M[$ii] = $arrYear[$ii-1];
-        // }
-
-        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
         try {
             $cid = (int)$args['cid'];
+
             $sql = "SELECT top (1) bh.useDrg,ph.pay_typedes,
-			CAST(CAST(substring(bh.rigthDate, 1, 4) AS int) - 543 AS varchar(4)) + '-' + substring(bh.rigthDate, 5, 2) + '-' + substring(bh.rigthDate, 7, 2) AS rigthDateNew,
-			ltrim(rtrim(pt.hn)) AS hn,
-			case when len(ps.CardID)>13 then (substring(ps.CardID,1,1)+substring(ps.CardID,3,4)+substring(ps.CardID,8,5)+substring(ps.CardID,14,2)+substring(ps.CardID,17,1)) else ps.CardID end AS cid,
-			rtrim(ltrim(c.titleName)) as pname, rtrim(ltrim(pt.firstName)) as firstName, rtrim(ltrim(pt.lastName)) AS lastName, pt.sex, pt.phone,
-			CAST(CAST(substring(pt.birthDay, 1, 4) AS int) - 543 AS varchar(4)) + '-' + substring(pt.birthDay, 5, 2) + '-' + substring(pt.birthDay, 7, 2) AS birthDay,
-			substring(CAST(CAST(CAST(CONVERT(varchar(8), GETDATE(), 112) AS int) + 5430000 AS int) AS char(8)), 1, 4) - CAST(substring(pt.birthDay, 1, 4) AS int) AS Age,
-			ltrim(rtrim(pt.addr1)) AS addrNum,
-			ltrim(rtrim(pt.moo)) AS addrMoo,
-			ltrim(rtrim(pt.addr2)) AS addrTown,
-			ltrim(rtrim(n.tambonName)) AS tumbon,
-			ltrim(rtrim(m.regionName)) AS aumper,
-			ltrim(rtrim(a.areaName)) AS province,pt.phone
-			FROM  PATIENT pt with(nolock) 
-			left join PTITLE c with (nolock) on (pt.titleCode=c.titleCode)
-			left join PatSS ps with (nolock) on (pt.hn=ps.hn)
-			left join Bill_h bh with (nolock) on (pt.hn=bh.hn)
-			left join Paytype ph with (nolock) on (bh.useDrg=ph.pay_typecode)
-			left join AREA a with(nolock) on (pt.areaCode=a.areaCode)
-			left join REGION m with(nolock) on (pt.regionCode =m.regionCode)  
-			left join Tambon n with(nolock) on (n.tambonCode=pt.regionCode+pt.tambonCode)
-			WHERE (pt.hn=:hn)
-			order by rigthDateNew desc";
+                    CAST(CAST(substring(bh.rigthDate, 1, 4) AS int) - 543 AS varchar(4)) + '-' + substring(bh.rigthDate, 5, 2) + '-' + substring(bh.rigthDate, 7, 2) AS rigthDateNew,
+                    ltrim(rtrim(pt.hn)) AS hn,
+                    case when len(ps.CardID)>13 then (substring(ps.CardID,1,1)+substring(ps.CardID,3,4)+substring(ps.CardID,8,5)+substring(ps.CardID,14,2)+substring(ps.CardID,17,1)) else ps.CardID end AS cid,
+                    rtrim(ltrim(c.titleName)) as pname, rtrim(ltrim(pt.firstName)) as firstName, rtrim(ltrim(pt.lastName)) AS lastName, pt.sex, pt.phone,
+                    CAST(CAST(substring(pt.birthDay, 1, 4) AS int) - 543 AS varchar(4)) + '-' + substring(pt.birthDay, 5, 2) + '-' + substring(pt.birthDay, 7, 2) AS birthDay,
+                    substring(CAST(CAST(CAST(CONVERT(varchar(8), GETDATE(), 112) AS int) + 5430000 AS int) AS char(8)), 1, 4) - CAST(substring(pt.birthDay, 1, 4) AS int) AS Age,
+                    ltrim(rtrim(pt.addr1)) AS addrNum,
+                    ltrim(rtrim(pt.moo)) AS addrMoo,
+                    ltrim(rtrim(pt.addr2)) AS addrTown,
+                    ltrim(rtrim(n.tambonName)) AS tumbon,
+                    ltrim(rtrim(m.regionName)) AS aumper,
+                    ltrim(rtrim(a.areaName)) AS province,pt.phone
+                    FROM  PATIENT pt with(nolock) 
+                    left join PTITLE c with (nolock) on (pt.titleCode=c.titleCode)
+                    left join PatSS ps with (nolock) on (pt.hn=ps.hn)
+                    left join Bill_h bh with (nolock) on (pt.hn=bh.hn)
+                    left join Paytype ph with (nolock) on (bh.useDrg=ph.pay_typecode)
+                    left join AREA a with(nolock) on (pt.areaCode=a.areaCode)
+                    left join REGION m with(nolock) on (pt.regionCode =m.regionCode)  
+                    left join Tambon n with(nolock) on (n.tambonCode=pt.regionCode+pt.tambonCode)
+                    WHERE (pt.hn=:hn)
+                    order by rigthDateNew desc";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindParam(':hn', $cid, \PDO::PARAM_INT);
