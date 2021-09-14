@@ -297,6 +297,80 @@ class AppointmentController extends Controller
         }
     }
 
+    
+    public function complete($request, $response, $args)
+    {
+        try {
+            // $post = (array)$request->getParsedBody();
+            $appointment = Appointment::find($args['id']);
+            $appointment->status = 2; // 0=รอดำเนินการ, 1=ตอบรับแล้ว, 2=ตรวจแล้ว, 3=ยกเลิกนัด
+
+            if($appointment->save()) {
+                return $response
+                        ->withStatus(200)
+                        ->withHeader("Content-Type", "application/json")
+                        ->write(json_encode([
+                            'status'        => 1,
+                            'message'       => 'Completing successfully',
+                            'appointment'   => $appointment
+                        ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            } else {
+                return $response
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status'    => 0,
+                        'message'   => 'Something went wrong!!'
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            }
+        } catch (\Exception $ex) {
+            return $response
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status'    => 0,
+                        'message'   => $ex->getMessage()
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+        }
+    }
+
+    
+    public function cancel($request, $response, $args)
+    {
+        try {
+            // $post = (array)$request->getParsedBody();
+            $appointment = Appointment::find($args['id']);
+            $appointment->status = 3; // 0=รอดำเนินการ, 1=ตอบรับแล้ว, 2=ตรวจแล้ว, 3=ยกเลิกนัด
+
+            if($appointment->save()) {
+                return $response
+                        ->withStatus(200)
+                        ->withHeader("Content-Type", "application/json")
+                        ->write(json_encode([
+                            'status'        => 1,
+                            'message'       => 'Canceling successfully',
+                            'appointment'   => $appointment
+                        ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            } else {
+                return $response
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status'    => 0,
+                        'message'   => 'Something went wrong!!'
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            }
+        } catch (\Exception $ex) {
+            return $response
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status'    => 0,
+                        'message'   => $ex->getMessage()
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+        }
+    }
+
     private function createAppointForm($id)
     {
         $appointment = Appointment::with(['patient' => function($q) {
