@@ -40,17 +40,66 @@ class HPatientController extends Controller
             $sql = "SELECT top (1) bh.useDrg,ph.pay_typedes,
                     CAST(CAST(substring(bh.rigthDate, 1, 4) AS int) - 543 AS varchar(4)) + '-' + substring(bh.rigthDate, 5, 2) + '-' + substring(bh.rigthDate, 7, 2) AS rigthDateNew,
                     ltrim(rtrim(pt.hn)) AS hn,
-                    case when len(ps.CardID)>13 then (substring(ps.CardID,1,1)+substring(ps.CardID,3,4)+substring(ps.CardID,8,5)+substring(ps.CardID,14,2)+substring(ps.CardID,17,1)) else ps.CardID end AS cid,
-                    rtrim(ltrim(c.titleName)) as pname, rtrim(ltrim(pt.firstName)) as firstName, rtrim(ltrim(pt.lastName)) AS lastName, pt.sex, pt.phone,
-                    CAST(CAST(substring(pt.birthDay, 1, 4) AS int) - 543 AS varchar(4)) + '-' + substring(pt.birthDay, 5, 2) + '-' + substring(pt.birthDay, 7, 2) AS birthDay,
-                    substring(CAST(CAST(CAST(CONVERT(varchar(8), GETDATE(), 112) AS int) + 5430000 AS int) AS char(8)), 1, 4) - CAST(substring(pt.birthDay, 1, 4) AS int) AS Age,
+                    CASE WHEN len(ps.CardID)>13 then (substring(ps.CardID,1,1)+substring(ps.CardID,3,4)+substring(ps.CardID,8,5)+substring(ps.CardID,14,2)+substring(ps.CardID,17,1)) 
+                    ELSE rtrim(ltrim(ps.CardID)) END AS cid,
+                    rtrim(ltrim(c.titleName)) AS pname, rtrim(ltrim(pt.firstName)) AS fname, rtrim(ltrim(pt.lastName)) AS lname, 
+                    CASE WHEN (pt.sex='ช') THEN 1 ELSE 2 END AS sex, rtrim(ltrim(pt.phone)) AS tel1,
+                    CAST(CAST(substring(pt.birthDay, 1, 4) AS int) - 543 AS varchar(4)) + '-' + substring(pt.birthDay, 5, 2) + '-' + substring(pt.birthDay, 7, 2) AS birthdate,
+                    substring(CAST(CAST(CAST(CONVERT(varchar(8), GETDATE(), 112) AS int) + 5430000 AS int) AS char(8)), 1, 4) - CAST(substring(pt.birthDay, 1, 4) AS int) AS age,
                     ltrim(rtrim(pt.addr1)) AS addrNum,
                     ltrim(rtrim(pt.moo)) AS addrMoo,
                     ltrim(rtrim(pt.addr2)) AS addrTown,
                     ltrim(rtrim(n.tambonName)) AS tumbon,
                     ltrim(rtrim(m.regionName)) AS aumper,
-                    ltrim(rtrim(a.areaName)) AS province,pt.phone
-                    FROM  PATIENT pt with(nolock) 
+                    ltrim(rtrim(a.areaName)) AS province 
+                    FROM PATIENT pt with(nolock) 
+                    left join PTITLE c with (nolock) on (pt.titleCode=c.titleCode)
+                    left join PatSS ps with (nolock) on (pt.hn=ps.hn)
+                    left join Bill_h bh with (nolock) on (pt.hn=bh.hn)
+                    left join Paytype ph with (nolock) on (bh.useDrg=ph.pay_typecode)
+                    left join AREA a with(nolock) on (pt.areaCode=a.areaCode)
+                    left join REGION m with(nolock) on (pt.regionCode =m.regionCode)  
+                    left join Tambon n with(nolock) on (n.tambonCode=pt.regionCode+pt.tambonCode)
+                    WHERE ((substring(ps.CardID,1,1)+substring(ps.CardID,3,4)+substring(ps.CardID,8,5)+substring(ps.CardID,14,2)+substring(ps.CardID,17,1))=:cid)
+                    ORDER BY rigthDateNew DESC";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':cid', $cid, \PDO::PARAM_INT);
+            $stmt->execute();
+
+            $patient = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            $data = json_encode($patient, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
+
+            return $response->withStatus(200)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write($data);
+        } catch(\Exception $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function getByHn($request, $response, $args)
+    {
+        try {
+            $hn = (int)$args['hn'];
+
+            $sql = "SELECT top (1) bh.useDrg,ph.pay_typedes,
+                    CAST(CAST(substring(bh.rigthDate, 1, 4) AS int) - 543 AS varchar(4)) + '-' + substring(bh.rigthDate, 5, 2) + '-' + substring(bh.rigthDate, 7, 2) AS rigthDateNew,
+                    ltrim(rtrim(pt.hn)) AS hn,
+                    CASE WHEN len(ps.CardID)>13 then (substring(ps.CardID,1,1)+substring(ps.CardID,3,4)+substring(ps.CardID,8,5)+substring(ps.CardID,14,2)+substring(ps.CardID,17,1)) 
+                    ELSE rtrim(ltrim(ps.CardID)) END AS cid,
+                    rtrim(ltrim(c.titleName)) AS pname, rtrim(ltrim(pt.firstName)) AS fname, rtrim(ltrim(pt.lastName)) AS lname, 
+                    CASE WHEN (pt.sex='ช') THEN 1 ELSE 2 END AS sex, rtrim(ltrim(pt.phone)) AS tel1,
+                    CAST(CAST(substring(pt.birthDay, 1, 4) AS int) - 543 AS varchar(4)) + '-' + substring(pt.birthDay, 5, 2) + '-' + substring(pt.birthDay, 7, 2) AS birthdate,
+                    substring(CAST(CAST(CAST(CONVERT(varchar(8), GETDATE(), 112) AS int) + 5430000 AS int) AS char(8)), 1, 4) - CAST(substring(pt.birthDay, 1, 4) AS int) AS age,
+                    ltrim(rtrim(pt.addr1)) AS addrNum,
+                    ltrim(rtrim(pt.moo)) AS addrMoo,
+                    ltrim(rtrim(pt.addr2)) AS addrTown,
+                    ltrim(rtrim(n.tambonName)) AS tumbon,
+                    ltrim(rtrim(m.regionName)) AS aumper,
+                    ltrim(rtrim(a.areaName)) AS province 
+                    FROM PATIENT pt with(nolock) 
                     left join PTITLE c with (nolock) on (pt.titleCode=c.titleCode)
                     left join PatSS ps with (nolock) on (pt.hn=ps.hn)
                     left join Bill_h bh with (nolock) on (pt.hn=bh.hn)
@@ -59,10 +108,10 @@ class HPatientController extends Controller
                     left join REGION m with(nolock) on (pt.regionCode =m.regionCode)  
                     left join Tambon n with(nolock) on (n.tambonCode=pt.regionCode+pt.tambonCode)
                     WHERE (pt.hn=:hn)
-                    order by rigthDateNew desc";
+                    ORDER BY rigthDateNew DESC";
 
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':hn', $cid, \PDO::PARAM_INT);
+            $stmt->bindParam(':hn', $hn, \PDO::PARAM_INT);
             $stmt->execute();
 
             $patient = $stmt->fetch(\PDO::FETCH_ASSOC);

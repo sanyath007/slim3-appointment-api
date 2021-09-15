@@ -28,6 +28,7 @@ $app->group('/api', function(Slim\App $app) {
     $app->get('/patients/{id}', 'PatientController:getById');
     $app->get('/patients/{cid}/cid', 'PatientController:getByCid');
     $app->get('/hpatients/{cid}/cid', 'HPatientController:getByCid');
+    $app->get('/hpatients/{hn}/hn', 'HPatientController:getByHn');
 
     $app->get('/departs', 'DepartmentController:getAll');
     $app->get('/departs/{id}', 'DepartmentController:getById');
