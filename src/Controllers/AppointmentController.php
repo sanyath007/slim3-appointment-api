@@ -91,10 +91,17 @@ class AppointmentController extends Controller
 
     public function getCountByDate($request, $response, $args)
     {
+        $type = $args['type'] == 0 ? false : true;
+
         $sql = "SELECT appoint_date, COUNT(id) AS num
-                FROM appointments 
-                GROUP BY appoint_date 
-                ORDER BY appoint_date";
+                FROM appointments ";
+        
+        if ($type) {
+            $sql .= "WHERE (appoint_type='" .$args['type']. "')";
+        }
+        
+        $sql .= "GROUP BY appoint_date ORDER BY appoint_date ";
+
         $appointments = DB::select($sql);
         $data = json_encode($appointments, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
 
