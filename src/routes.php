@@ -40,6 +40,7 @@ $app->group('/api', function(Slim\App $app) {
     $app->put('/doctors/{id}', 'DoctorController:update');
     $app->delete('/doctors/{id}', 'DoctorController:delete');
     $app->get('/doctors/{specialist}/clinic', 'DoctorController:getDortorsOfClinic');
+    $app->get('/doctors/{id}/schedules', 'DoctorController:getDortorSchedules');
 
     $app->get('/dashboard/{month}/stat-card', 'DashboardController:getStatCard');
     $app->get('/dashboard/{month}/appoint-day', 'DashboardController:getAppointPerDay');

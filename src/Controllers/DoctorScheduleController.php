@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\Controller;
 use Illuminate\Database\Capsule\Manager as DB;
+use App\Models\DoctorSchedule;
 use App\Models\Doctor;
 use App\Models\Employee;
 use App\Models\DoctorSpecialist;
@@ -12,9 +13,8 @@ use App\Models\PositionType;
 use App\Models\PositionClass;
 use App\Models\Department;
 use App\Models\Specialist;
-use App\Models\DoctorSchedule;
 
-class DoctorController extends Controller
+class DoctorScheduleController extends Controller
 {
     public function getAll($request, $response, $args)
     {
@@ -65,18 +65,6 @@ class DoctorController extends Controller
         return $response->withStatus(200)
                 ->withHeader("Content-Type", "application/json")
                 ->write($data);
-    }
-
-    public function getDortorSchedules($request, $response, $args)
-    {
-        $schedules = DoctorSchedule::where('doctor', $args['id'])->get();
-
-        return $response
-                ->withStatus(200)
-                ->withHeader("Content-Type", "application/json")
-                ->write(json_encode([
-                    'schedules' => $schedules
-                ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
     }
 
     public function getInitForm($request, $response, $args)
