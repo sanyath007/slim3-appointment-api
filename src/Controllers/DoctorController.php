@@ -46,13 +46,12 @@ class DoctorController extends Controller
     public function getDortorsOfClinic($request, $response, $args)
     {
         // TODO: to response doctor that have fewest appointments
-        $sql = "select d.emp_id, count(a.id) as amt	
-                from appointment_online_db.doctors d
-                left join appointment_online_db.appointments a on (d.emp_id=a.doctor)
-                where (d.emp_id in (select doctor from appointment_online_db.doctor_specialists where specialist=?))
-                and (d.status='1') #1=อยู่,2=ลาศึกษาต่อ,3=ลาคลอด,4=โอน/ย้าย,5=ลาออก
-                group by d.emp_id
-                order by count(a.id) ASC";
+        $sql = "SELECT d.emp_id, count(a.id) AS amt	
+                FROM doctors d LEFT JOIN appointments a ON (d.emp_id=a.doctor)
+                WHERE (d.emp_id IN (select doctor from doctor_specialists where specialist=?))
+                AND (d.status='1') #1=อยู่,2=ลาศึกษาต่อ,3=ลาคลอด,4=โอน/ย้าย,5=ลาออก
+                GROUP BY d.emp_id
+                ORDER BY count(a.id) ASC ";
         $doctor_count = collect(DB::select($sql, [$args['specialist']]))->first();
 
         $doctor = Doctor::where('emp_id', $doctor_count->emp_id)
@@ -74,9 +73,7 @@ class DoctorController extends Controller
         return $response
                 ->withStatus(200)
                 ->withHeader("Content-Type", "application/json")
-                ->write(json_encode([
-                    'schedules' => $schedules
-                ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+                ->write(json_encode($schedules, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
     }
 
     public function getInitForm($request, $response, $args)
