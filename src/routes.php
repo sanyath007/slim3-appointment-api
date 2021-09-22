@@ -42,6 +42,13 @@ $app->group('/api', function(Slim\App $app) {
     $app->get('/doctors/{specialist}/clinic', 'DoctorController:getDortorsOfClinic');
     $app->get('/doctors/{id}/schedules', 'DoctorController:getDortorSchedules');
 
+    $app->get('/schedules', 'DoctorScheduleController:getAll');
+    $app->get('/schedules/{id}', 'DoctorScheduleController:getById');
+    $app->get('/schedules/init/form', 'DoctorScheduleController:getInitForm');
+    $app->post('/schedules', 'DoctorScheduleController:store');
+    $app->put('/schedules/{id}', 'DoctorScheduleController:update');
+    $app->delete('/schedules/{id}', 'DoctorScheduleController:delete');
+
     $app->get('/dashboard/{month}/stat-card', 'DashboardController:getStatCard');
     $app->get('/dashboard/{month}/appoint-day', 'DashboardController:getAppointPerDay');
     $app->get('/dashboard/{month}/appoint-by-clinic', 'DashboardController:getAppointByClinic');
