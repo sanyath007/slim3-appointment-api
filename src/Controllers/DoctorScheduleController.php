@@ -30,7 +30,7 @@ class DoctorScheduleController extends Controller
     
     public function getById($request, $response, $args)
     {
-        $schedule = DoctorSchedule::where('emp_id', $args['id'])
+        $schedule = DoctorSchedule::where('id', $args['id'])
                     ->with('doctor','doctor.employee')
                     // ->with('employee.position', 'employee.positionClass', 'employee.positionType')
                     // ->with('depart', 'specialists', 'specialists.specialist')
