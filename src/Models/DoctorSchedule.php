@@ -10,6 +10,6 @@ class DoctorSchedule extends Model
 
     public function doctor()
     {
-        return $this->belongsTo(Doctor::class, 'doctor', 'id');
+        return $this->belongsTo(Doctor::class, 'doctor', 'emp_id');
     }
 }

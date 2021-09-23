@@ -16,11 +16,12 @@ class DoctorScheduleController extends Controller
 {
     public function getAll($request, $response, $args)
     {
-        $doctors = Doctor::with('employee', 'employee.position', 'employee.positionClass', 'employee.positionType')
-                    ->with('depart', 'specialists', 'specialists.specialist')
+        $schedules = DoctorSchedule::with('doctor','doctor.employee')
+                    // ->with('employee.position', 'employee.positionClass', 'employee.positionType')
+                    // ->with('depart', 'specialists', 'specialists.specialist')
                     ->get();
         
-        $data = json_encode($doctors, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
+        $data = json_encode($schedules, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
 
         return $response->withStatus(200)
                 ->withHeader("Content-Type", "application/json")
@@ -29,12 +30,13 @@ class DoctorScheduleController extends Controller
     
     public function getById($request, $response, $args)
     {
-        $doctor = Doctor::where('emp_id', $args['id'])
-                    ->with('employee', 'employee.position', 'employee.positionClass', 'employee.positionType')
-                    ->with('depart', 'specialists', 'specialists.specialist')
+        $schedule = DoctorSchedule::where('emp_id', $args['id'])
+                    ->with('doctor','doctor.employee')
+                    // ->with('employee.position', 'employee.positionClass', 'employee.positionType')
+                    // ->with('depart', 'specialists', 'specialists.specialist')
                     ->first();
                     
-        $data = json_encode($doctor, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
+        $data = json_encode($schedule, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
 
         return $response->withStatus(200)
                 ->withHeader("Content-Type", "application/json")
