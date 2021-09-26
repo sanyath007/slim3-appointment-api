@@ -139,7 +139,7 @@ class DoctorScheduleController extends Controller
         }
     }
 
-    public function delete()
+    public function delete($request, $response, $args)
     {
         try {
             $schedule = DoctorSchedule::find($args['id']);
