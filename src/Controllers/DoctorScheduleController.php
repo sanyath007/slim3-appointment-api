@@ -19,6 +19,8 @@ class DoctorScheduleController extends Controller
         $schedules = DoctorSchedule::with('doctor','doctor.employee')
                     // ->with('employee.position', 'employee.positionClass', 'employee.positionType')
                     // ->with('depart', 'specialists', 'specialists.specialist')
+                    ->orderBy('month', 'DESC')
+                    ->orderBy('doctor')
                     ->get();
         
         $data = json_encode($schedules, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
