@@ -38,7 +38,7 @@ class AppointmentController extends Controller
                         ->with(['doctor.employee' => function($q) {
                             $q->select('id', 'prefix', 'fname', 'lname');
                         }])
-                        ->orderBy('appoint_date')
+                        ->orderBy('appoint_date', 'DESC')
                         ->get();
         $data = json_encode($appointments, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
 
