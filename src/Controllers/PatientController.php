@@ -58,15 +58,15 @@ class PatientController extends Controller
         echo Uuid::uuid4();
     }
 
-    public function getFormInit($request, $response, $args)
+    public function getInitForm($request, $response, $args)
     {                    
         $data = json_encode([
-            'blood_groups'  => BloodGroup::all(),
             'rights'        => Right::all(),
             'tambons'       => Tambon::all(),
             'amphurs'       => Amphur::all(),
             'changwats'     => Changwat::all(),
-            'nationalities' => Nationality::orderBy('nhso_code')->get()
+            'nationalities' => Nationality::orderBy('nationality')->get(),
+            'blood_groups'  => BloodGroup::all(),
         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
 
         return $response->withStatus(200)
