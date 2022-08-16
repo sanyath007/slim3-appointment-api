@@ -1,6 +1,6 @@
 .container {
   font-family: "sarabun";
-  font-size: 12pt;
+  font-size: 14pt;
   width: 100%;
   background-image: url("assets/img/print_bg.png");
   background-repeat: repeat;
@@ -43,12 +43,16 @@ h4 {
   border: 1px dotted grey;
 }
 .right__content-appoint {
-  height: 104px;
+  height: 60px;
 }
 .right__content-remark {
   height: 80px;
 }
-.left__content-patient,
+.symptom {
+  height: 98px;
+  margin: 0;
+  padding: 0 5px;
+}
 .right__content-appoint,
 .right__content-clinic {
   border-bottom: 1px dotted grey;
@@ -95,6 +99,23 @@ h4 {
 .footer-content {
   display: flex;
   justify-content: center;
+}
+.footer-content .process {
+  border: 1px dotted grey;
+  padding: 10px;
+}
+.process p {
+  font-weight: bold;
+  margin: 2px;
+}
+.process ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.process ul li {
+  margin: 0;
+  padding-left: 10px;
 }
 .left-footer {
   width: 60%;

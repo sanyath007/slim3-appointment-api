@@ -165,13 +165,20 @@ class AppointmentController extends Controller
                 $appointment->appoint_time  = $post['appoint_time'];
                 $appointment->appoint_type  = $post['appoint_type'];
                 $appointment->clinic        = $post['clinic'];
-                $appointment->doctor        = $post['doctor'];
-                $appointment->diag_group    = $post['diag_group'];
+
+                if ($post['appoint_type'] == '1') {
+                    $appointment->doctor        = $post['doctor'];
+                    $appointment->diag_group    = $post['diag_group'];
+                }
+
                 $appointment->diag_text     = $post['diag_text'];
+                $appointment->symptom       = $post['symptom'];
                 $appointment->refer_no      = $post['refer_no'];
                 $appointment->refer_cause   = $post['refer_cause'];
                 $appointment->hospcode      = $post['hospcode'];
                 $appointment->appoint_user  = $post['user'];
+                $appointment->appointer     = $post['appointer'];
+                $appointment->appointer_position  = $post['appointer_position'];
                 $appointment->status        = 0; // 0=รอดำเนินการ, 1=ตอบรับแล้ว, 2=ตรวจแล้ว, 3=ยกเลิกนัด
                 $appointment->save();
 
@@ -209,13 +216,20 @@ class AppointmentController extends Controller
                 $appointment->appoint_time  = $post['appoint_time'];
                 $appointment->appoint_type  = $post['appoint_type'];
                 $appointment->clinic        = $post['clinic'];
-                $appointment->doctor        = $post['doctor'];
-                $appointment->diag_group    = $post['diag_group'];
+
+                if ($post['appoint_type'] == '1') {
+                    $appointment->doctor        = $post['doctor'];
+                    $appointment->diag_group    = $post['diag_group'];
+                }
+
                 $appointment->diag_text     = $post['diag_text'];
+                $appointment->symptom       = $post['symptom'];
                 $appointment->refer_no      = $post['refer_no'];
                 $appointment->refer_cause   = $post['refer_cause'];
                 $appointment->hospcode      = $post['hospcode'];
                 $appointment->appoint_user  = $post['user'];
+                $appointment->appointer     = $post['appointer'];
+                $appointment->appointer_position  = $post['appointer_position'];
                 $appointment->status        = 0; // 0=รอดำเนินการ, 1=ตอบรับแล้ว, 2=ตรวจแล้ว, 3=ยกเลิกนัด
                 $appointment->save();
 
@@ -262,13 +276,20 @@ class AppointmentController extends Controller
             $appointment->appoint_time  = $post['appoint_time'];
             $appointment->appoint_type  = $post['appoint_type'];
             $appointment->clinic        = $post['clinic'];
-            $appointment->doctor        = $post['doctor'];
-            $appointment->diag_group    = $post['diag_group'];
+
+            if ($post['appoint_type'] != '1') {
+                $appointment->doctor        = $post['doctor'];
+                $appointment->diag_group    = $post['diag_group'];
+            }
+
             $appointment->diag_text     = $post['diag_text'];
+            $appointment->symptom       = $post['symptom'];
             $appointment->refer_no      = $post['refer_no'];
             $appointment->refer_cause   = $post['refer_cause'];
             // $appointment->hospcode      = $post['hospcode'];
             $appointment->appoint_user  = $post['user'];
+            $appointment->appointer     = $post['appointer'];
+            $appointment->appointer_position  = $post['appointer_position'];
             // $appointment->status        = 0; // 0=รอดำเนินการ, 1=ตอบรับแล้ว, 2=ตรวจแล้ว, 3=ยกเลิกนัด
 
             if($appointment->save()) {
@@ -413,6 +434,105 @@ class AppointmentController extends Controller
     }
 
     private function createAppointForm($id)
+    {
+        $appointment = Appointment::with(['patient' => function($q) {
+                            $q->select('id','hn','pname','fname','lname','cid','tel1','sex','birthdate');
+                        }])
+                        ->with(['clinic' => function($q) {
+                            $q->select('id', 'clinic_name');
+                        }])
+                        ->with(['clinic.room' => function($q) {
+                            $q->select('id', 'room_name', 'room_tel1');
+                        }])
+                        ->with(['right' => function($q) {
+                            $q->select('id', 'right_name');
+                        }])
+                        ->with(['referCause' => function($q) {
+                            $q->select('id', 'name');
+                        }])
+                        ->with(['hosp' => function($q) {
+                            $q->select('hospcode', 'name', 'hospital_phone');
+                        }])
+                        ->where('id', $id)
+                        ->first();
+
+        $building = $appointment['relations']['clinic']->id == '9' ? 'อาคาร M Park' : 'อาคารผู้ป่วยนอก';
+        $appointTime = $appointment->appoint_time == '1' ? '08.00 - 12.00 น.' : '12.00 - 16.00 น.';
+
+        $stylesheet = file_get_contents('assets/css/styles.css');
+        $content = '
+            <div class="container">
+                <div class="header">
+                    <div class="header-img">
+                        <img src="assets/img/logo_mnrh_512x512.jpg" width="100%" height="100" />
+                    </div>
+                    <div class="header-text">
+                        <h1>ใบนัดตรวจ' .$appointment['relations']['clinic']->clinic_name. '</h1>
+                        <h2>โรงพยาบาลมหาราชนครราชสีมา</h2>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="left__content-container">
+                        <div class="left__content-patient">
+                            <p>เลขที่บัตรประชาชน <span>' .$appointment['relations']['patient']->cid. '</span></p>
+                            <p>ชื่อ-สกุล <span>
+                                ' .$appointment['relations']['patient']->pname.$appointment['relations']['patient']->fname. ' '.$appointment['relations']['patient']->lname. '
+                            </span></p>
+                            <p>โทรศัพท์ <span>' .$appointment['relations']['patient']->tel1. '</span></p>
+                            <p>สิทธิการรักษา <span>' .$appointment['relations']['right']->right_name. '</span></p>
+                            <p>การวินิจฉัย <span>' .$appointment->diag_text. '</span></p>
+                            <p>อาการเพิ่มเติม</p>
+                            <div class="symptom">
+                                ' .$appointment->symptom. '
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right__content-container">
+                        <div class="right__content-appoint">
+                            <p>วันนัด <span>' .$appointment->appoint_date. '</span></p>
+                            <p>เวลา <span>' .$appointTime. '</span></p>
+                        </div>
+                        <div class="right__content-clinic">
+                            <p>ยื่นใบนัดที่ <span>' .$appointment['relations']['clinic']['relations']['room']->room_name. '</span></p>
+                            <p><span>' .$building. '</span></p>
+                            <p>หมายเลขโทรศัพท์ <span>' .$appointment['relations']['clinic']['relations']['room']->room_tel1. '</span></p>
+                        </div>
+                        <div class="right__content-remark">
+                            <p>ผู้ลงเวลานัด <span>' .$appointment->appointer. '</span></p>
+                            <p>ผู้พิมพ์ใบนัด <span>' .$appointment->appointer_position. '</span></p>
+                            <p>วัน/เวลา ที่ลงนัด <span>' .$appointment->created_at. '</span></p>
+                        </div>
+                    </div>
+                    <div class="bottom-content">
+                        <p>สถานพยาบาลออกใบส่งตัว <span>' .$appointment['relations']['hosp']->name. '</span></p>
+                        <p>โทรศัพท์ <span>044395000 ต่อ 2510</span></p>
+                        <p>หมายเหตุ : <span>กรณีไม่สามารถมาตามนัดได้ หรือต้องการเลื่อนนัด ให้ติดต่อที่โรงพยาบาลที่ออกใบนัด</span></p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="footer-content">
+                        <div class="process">
+                            <p>ขั้นตอนการรับบริการ</p>
+                            <ul>
+                                <li>1. ยื่นใบนัด / ใบส่งตัว (ออกจากระบบ R9Refer เท่านั้น) <span class="text-underline">ที่' .$appointment['relations']['clinic']['relations']['room']->room_name. '</span></li>
+                                <li>2. ชั่งน้ำหนัก วัดความดันโลหิต</li>
+                                <li>3. รอพยาบาลเรียกซักประวัติ</li>
+                                <li>4. พบแพทย์</li>
+                                <li>5. พบพยาบาลหลังตรวจ รับใบสั่งยา และ / หรือ ใบนัดครั้งต่อไป</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ';
+
+        // TODO: should create pdf file with generated unduplicate name for avoid browser caching
+        $filename = APP_ROOT_DIR . '/public/downloads/' .$appointment->id. '.pdf';
+
+        $this->generatePdf($stylesheet, $content, $filename);
+    }
+
+    private function createAppointForm2($id)
     {
         $appointment = Appointment::with(['patient' => function($q) {
                             $q->select('id','hn','pname','fname','lname','cid','tel1','sex','birthdate');
