@@ -2,3 +2,5 @@ logs
 vendor
 public/downloads/*
 .env
+.env.prod
+.env.stage

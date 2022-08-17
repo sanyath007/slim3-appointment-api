@@ -84,3 +84,12 @@ function thdateToDbdate($str)
 
     return ((int)$year - 543). '-' .$month. '-' .$day;
 }
+
+function dbDateToThDate($dbDate)
+{
+    if(empty($dbDate)) return '';
+
+    $arrDate = explode('-', $dbDate);
+
+    return $arrDate[2]. '/' .$arrDate[1]. '/' .((int)$arrDate[0] + 543);
+}

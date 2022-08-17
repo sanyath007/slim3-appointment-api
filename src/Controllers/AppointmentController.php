@@ -110,6 +110,29 @@ class AppointmentController extends Controller
                 ->write($data);
     }
 
+    public function getCountByClinic($request, $response, $args)
+    {
+        $type = $args['type'] == 0 ? false : true;
+
+        $sql = "SELECT appoint_date, COUNT(id) AS num
+                FROM appointments ";
+        
+        if ($type) {
+            $sql .= "WHERE (appoint_type='" .$args['type']. "')";
+        }
+
+        $sql .= "AND (clinic='" .$args['clinic']. "')";
+        
+        $sql .= "GROUP BY appoint_date ORDER BY appoint_date ";
+
+        $appointments = DB::select($sql);
+        $data = json_encode($appointments, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
+
+        return $response->withStatus(200)
+                ->withHeader("Content-Type", "application/json")
+                ->write($data);
+    }
+
     public function getInitForm($request, $response, $args)
     {
         $data = json_encode([
@@ -396,7 +419,6 @@ class AppointmentController extends Controller
         }
     }
 
-    
     public function cancel($request, $response, $args)
     {
         try {
@@ -411,6 +433,46 @@ class AppointmentController extends Controller
                         ->write(json_encode([
                             'status'        => 1,
                             'message'       => 'Canceling successfully',
+                            'appointment'   => $appointment
+                        ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            } else {
+                return $response
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status'    => 0,
+                        'message'   => 'Something went wrong!!'
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            }
+        } catch (\Exception $ex) {
+            return $response
+                    ->withStatus(500)
+                    ->withHeader("Content-Type", "application/json")
+                    ->write(json_encode([
+                        'status'    => 0,
+                        'message'   => $ex->getMessage()
+                    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+        }
+    }
+
+    public function postpone($request, $response, $args)
+    {
+        try {
+            $post = (array)$request->getParsedBody();
+
+            $appointment = Appointment::find($args['id']);
+            $appointment->appoint_date = thdateToDbdate($post['appoint_date']);
+
+            if($appointment->save()) {
+                /** สร้างไฟล์ใบนัด */
+                $this->createAppointForm($appointment->id);
+
+                return $response
+                        ->withStatus(200)
+                        ->withHeader("Content-Type", "application/json")
+                        ->write(json_encode([
+                            'status'        => 1,
+                            'message'       => 'Postponement successfully',
                             'appointment'   => $appointment
                         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
             } else {
@@ -489,7 +551,7 @@ class AppointmentController extends Controller
                     </div>
                     <div class="right__content-container">
                         <div class="right__content-appoint">
-                            <p>วันนัด <span>' .$appointment->appoint_date. '</span></p>
+                            <p>วันนัด <span>' .dbDateToThDate($appointment->appoint_date). '</span></p>
                             <p>เวลา <span>' .$appointTime. '</span></p>
                         </div>
                         <div class="right__content-clinic">
