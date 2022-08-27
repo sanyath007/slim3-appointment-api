@@ -26,6 +26,10 @@ $app->group('/api', function(Slim\App $app) {
     $app->put('/appointments/{id}/cancel', 'AppointmentController:cancel');
     $app->put('/appointments/{id}/postpone', 'AppointmentController:postpone');
 
+    $app->get('/postponements', 'PostponementController:getAll');
+    $app->get('/postponements/{id}', 'PostponementController:getById');
+    $app->get('/postponements/{appointId}/appointment', 'PostponementController:getByAppoint');
+
     $app->get('/patients', 'PatientController:getAll');
     $app->get('/patients/{id}', 'PatientController:getById');
     $app->get('/patients/{cid}/cid', 'PatientController:getByCid');

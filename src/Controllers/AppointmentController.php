@@ -15,6 +15,7 @@ use App\Models\ReferCause;
 use App\Models\Right;
 use App\Models\Doctor;
 use App\Models\Room;
+use App\Models\Postponement;
 
 class AppointmentController extends Controller
 {
@@ -461,9 +462,22 @@ class AppointmentController extends Controller
             $post = (array)$request->getParsedBody();
 
             $appointment = Appointment::find($args['id']);
+            $old = $appointment;
             $appointment->appoint_date = thdateToDbdate($post['appoint_date']);
 
             if($appointment->save()) {
+                /** Create new postponement data */
+                $postpone = new Postponement();
+                $postpone->appoint_id       = $old->id;
+                $postpone->appoint_type_id  = $old->appoint_type;
+                $postpone->old_date         = $old->appoint_date;
+                $postpone->old_period       = $old->appoint_time;
+                $postpone->new_date         = $appointment->appoint_date;
+                $postpone->new_period       = $appointment->appoint_time;
+                $postpone->postponed_user   = $post['user'];
+                $postpone->remark           = $post['remark'];
+                $postpone->save();
+
                 /** สร้างไฟล์ใบนัด */
                 $this->createAppointForm($appointment->id);
 

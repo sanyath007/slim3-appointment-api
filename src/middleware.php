@@ -136,6 +136,10 @@ $container['DoctorScheduleController'] = function($c) {
     return new App\Controllers\DoctorScheduleController($c);
 };
 
+$container['PostponementController'] = function($c) {
+    return new App\Controllers\PostponementController($c);
+};
+
 /** 
  * ============================================================
  * JWT middleware
