@@ -190,7 +190,7 @@ class AppointmentController extends Controller
                 $appointment->appoint_type  = $post['appoint_type'];
                 $appointment->clinic        = $post['clinic'];
 
-                if ($post['appoint_type'] == '1') {
+                if ($post['appoint_type'] != '1') {
                     $appointment->doctor        = $post['doctor'];
                     $appointment->diag_group    = $post['diag_group'];
                 }
@@ -199,6 +199,7 @@ class AppointmentController extends Controller
                 $appointment->symptom       = $post['symptom'];
                 $appointment->refer_no      = $post['refer_no'];
                 $appointment->refer_cause   = $post['refer_cause'];
+                $appointment->refer_cause_text = $post['refer_cause_text'];
                 $appointment->hospcode      = $post['hospcode'];
                 $appointment->appoint_user  = $post['user'];
                 $appointment->appointer     = $post['appointer'];
@@ -241,7 +242,7 @@ class AppointmentController extends Controller
                 $appointment->appoint_type  = $post['appoint_type'];
                 $appointment->clinic        = $post['clinic'];
 
-                if ($post['appoint_type'] == '1') {
+                if ($post['appoint_type'] != '1') {
                     $appointment->doctor        = $post['doctor'];
                     $appointment->diag_group    = $post['diag_group'];
                 }
@@ -250,6 +251,7 @@ class AppointmentController extends Controller
                 $appointment->symptom       = $post['symptom'];
                 $appointment->refer_no      = $post['refer_no'];
                 $appointment->refer_cause   = $post['refer_cause'];
+                $appointment->refer_cause_text = $post['refer_cause_text'];
                 $appointment->hospcode      = $post['hospcode'];
                 $appointment->appoint_user  = $post['user'];
                 $appointment->appointer     = $post['appointer'];
@@ -310,6 +312,7 @@ class AppointmentController extends Controller
             $appointment->symptom       = $post['symptom'];
             $appointment->refer_no      = $post['refer_no'];
             $appointment->refer_cause   = $post['refer_cause'];
+            $appointment->refer_cause_text = $post['refer_cause_text'];
             // $appointment->hospcode      = $post['hospcode'];
             $appointment->appoint_user  = $post['user'];
             $appointment->appointer     = $post['appointer'];
@@ -532,7 +535,7 @@ class AppointmentController extends Controller
                         ->where('id', $id)
                         ->first();
 
-        $building = $appointment['relations']['clinic']->id == '9' ? 'อาคาร M Park' : 'อาคารผู้ป่วยนอกและอำนวยการ';
+        $building = ($appointment['relations']['clinic']->id == '9' || $appointment['relations']['clinic']->id == '10') ? 'อาคาร M Park' : 'อาคารผู้ป่วยนอกและอำนวยการ';
         $appointTime = $appointment->appoint_time == '1' ? '08.00 - 12.00 น.' : '12.00 - 16.00 น.';
 
         $stylesheet = file_get_contents('assets/css/styles.css');
