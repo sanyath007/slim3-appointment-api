@@ -532,7 +532,7 @@ class AppointmentController extends Controller
                         ->where('id', $id)
                         ->first();
 
-        $building = $appointment['relations']['clinic']->id == '9' ? 'อาคาร M Park' : 'อาคารผู้ป่วยนอก';
+        $building = $appointment['relations']['clinic']->id == '9' ? 'อาคาร M Park' : 'อาคารผู้ป่วยนอกและอำนวยการ';
         $appointTime = $appointment->appoint_time == '1' ? '08.00 - 12.00 น.' : '12.00 - 16.00 น.';
 
         $stylesheet = file_get_contents('assets/css/styles.css');
