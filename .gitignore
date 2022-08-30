@@ -3,4 +3,5 @@ vendor
 public/downloads/*
 .env
 .env.prod
+.env.local
 .env.stage
