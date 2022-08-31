@@ -134,10 +134,10 @@ class PatientController extends Controller
             $patient->nationality   = $post['nationality'];
             $patient->race          = $post['race'];
             $patient->blood_group   = $post['blood_group'];
-            $patient->reg_date      = $post['reg_date'];
-            $patient->line_id       = $post['line_id'];
-            $patient->gmap_url      = $post['gmap_url'];
-            $patient->verify_hashed = password_hash($post['tel1'], PASSWORD_BCRYPT);
+            // $patient->reg_date      = $post['reg_date'];
+            // $patient->line_id       = $post['line_id'];
+            // $patient->gmap_url      = $post['gmap_url'];
+            // $patient->verify_hashed = password_hash($post['tel1'], PASSWORD_BCRYPT);
 
             /** Upload image */
             $upload_url = 'http://'.$request->getServerParam('SERVER_NAME').$request->getServerParam('PHP_SELF');
@@ -217,10 +217,10 @@ class PatientController extends Controller
             $patient->nationality = $post['nationality'];
             // $patient->race = $post['race'];
             $patient->blood_group = $post['blood_group'];
-            $patient->reg_date = $post['reg_date'];
-            $patient->line_id = $post['line_id'];
-            $patient->gmap_url = $post['gmap_url'];
-            $patient->verify_hashed = password_hash($post['tel1'], PASSWORD_BCRYPT);
+            // $patient->reg_date = $post['reg_date'];
+            // $patient->line_id = $post['line_id'];
+            // $patient->gmap_url = $post['gmap_url'];
+            // $patient->verify_hashed = password_hash($post['tel1'], PASSWORD_BCRYPT);
 
             /** Upload image */
             $upload_url = 'http://'.$request->getServerParam('SERVER_NAME').$request->getServerParam('PHP_SELF');
