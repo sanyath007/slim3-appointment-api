@@ -111,56 +111,39 @@ class PatientController extends Controller
             $post = (array)$request->getParsedBody();
 
             $patient = new Patient;
-            $patient->id            = Uuid::uuid4();
             $patient->hn            = $post['hn'];
             $patient->cid           = $post['cid'];
             $patient->pname         = $post['pname'];
             $patient->fname         = $post['fname'];
             $patient->lname         = $post['lname'];
             $patient->sex           = $post['sex'];
-            $patient->birthdate     = $post['birthdate'];
-            $patient->address       = $post['address'];
-            $patient->moo           = $post['moo'];
-            $patient->road          = $post['road'];
-            $patient->tambon        = $post['tambon'];
-            $patient->amphur        = $post['amphur'];
-            $patient->changwat      = $post['changwat'];
-            $patient->zipcode       = $post['zipcode'];
+            $patient->birthdate     = thdateToDbdate($post['birthdate']);
+            // $patient->address       = $post['address'];
+            // $patient->moo           = $post['moo'];
+            // $patient->road          = $post['road'];
+            // $patient->tambon        = $post['tambon'];
+            // $patient->amphur        = $post['amphur'];
+            // $patient->changwat      = $post['changwat'];
+            // $patient->zipcode       = $post['zipcode'];
             $patient->tel1          = $post['tel1'];
             $patient->tel2          = $post['tel2'];
-            $patient->main_right    = $post['right'];
-            $patient->hosp_main     = $post['hosp_main'];
+            $patient->main_right    = $post['main_right'];
+            // $patient->hosp_main     = $post['hosp_main'];
             $patient->passport      = $post['passport'];
-            $patient->nationality   = $post['nationality'];
-            $patient->race          = $post['race'];
-            $patient->blood_group   = $post['blood_group'];
+            // $patient->nationality   = $post['nationality'];
+            // $patient->race          = $post['race'];
+            // $patient->blood_group   = $post['blood_group'];
             // $patient->reg_date      = $post['reg_date'];
             // $patient->line_id       = $post['line_id'];
             // $patient->gmap_url      = $post['gmap_url'];
             // $patient->verify_hashed = password_hash($post['tel1'], PASSWORD_BCRYPT);
 
             /** Upload image */
-            $upload_url = 'http://'.$request->getServerParam('SERVER_NAME').$request->getServerParam('PHP_SELF');
-            $img_url = uploadImage($post['img_url'], $upload_url);
-            $patient->img_url = $img_url;
+            // $upload_url = 'http://'.$request->getServerParam('SERVER_NAME').$request->getServerParam('PHP_SELF');
+            // $img_url = uploadImage($post['img_url'], $upload_url);
+            // $patient->img_url = $img_url;
 
             if($patient->save()) {
-                if (count($post['visits']) > 0) {
-                    foreach ($post['visits'] as $vs) {
-                        $visit              = new Visit();
-                        $visit->vn          = Uuid::uuid4()->toString();
-                        $visit->an          = $vs['an'];
-                        $visit->visit_date  = $vs['visit_date'];
-                        $visit->visit_time  = $vs['visit_time'];
-                        $visit->detail      = $vs['detail'];
-                        $visit->patient_hn  = $patient->hn;
-                        $visit->visit_right = $patient->right;
-                        $visit->is_admit    = 1;
-
-                        $visit->save();
-                    }
-                }
-
                 return $response
                         ->withStatus(200)
                         ->withHeader("Content-Type", "application/json")
@@ -194,38 +177,39 @@ class PatientController extends Controller
         try {
             $post = (array)$request->getParsedBody();
 
-            $patient = Patient::where('hn', $post['hn'])->first();
-            $patient->hn = $post['hn'];
-            $patient->cid = $post['cid'];
-            $patient->pname = $post['pname'];
-            $patient->fname = $post['fname'];
-            $patient->lname = $post['lname'];
-            $patient->sex = $post['sex'];
-            $patient->birthdate = $post['birthdate'];
-            $patient->address = $post['address'];
-            $patient->moo = $post['moo'];
-            $patient->road = $post['road'];
-            $patient->tambon = $post['tambon'];
-            $patient->amphur = $post['amphur'];
-            $patient->changwat = $post['changwat'];
-            $patient->zipcode = $post['zipcode'];
-            $patient->tel1 = $post['tel1'];
-            $patient->tel2 = $post['tel2'];
-            $patient->right = $post['right'];
+            $patient = Patient::find($args['id']);
+            $patient->hn        = $post['hn'];
+            $patient->cid       = $post['cid'];
+            $patient->pname     = $post['pname'];
+            $patient->fname     = $post['fname'];
+            $patient->lname     = $post['lname'];
+            $patient->sex       = $post['sex'];
+            $patient->birthdate = thdateToDbdate($post['birthdate']);
+            // $patient->address   = $post['address'];
+            // $patient->moo       = $post['moo'];
+            // $patient->road      = $post['road'];
+            // $patient->tambon    = $post['tambon'];
+            // $patient->amphur    = $post['amphur'];
+            // $patient->changwat  = $post['changwat'];
+            // $patient->zipcode   = $post['zipcode'];
+            $patient->tel1      = $post['tel1'];
+            $patient->tel2      = $post['tel2'];
+            $patient->main_right = $post['main_right'];
             // $patient->hosp_main = $post['hosp_main'];
-            // $patient->passport = $post['passport'];
-            $patient->nationality = $post['nationality'];
+            $patient->passport = $post['passport'];
+            // $patient->nationality = $post['nationality'];
             // $patient->race = $post['race'];
-            $patient->blood_group = $post['blood_group'];
+            // $patient->blood_group = $post['blood_group'];
             // $patient->reg_date = $post['reg_date'];
             // $patient->line_id = $post['line_id'];
             // $patient->gmap_url = $post['gmap_url'];
             // $patient->verify_hashed = password_hash($post['tel1'], PASSWORD_BCRYPT);
+            $patient->remark = $post['remark'];
 
             /** Upload image */
-            $upload_url = 'http://'.$request->getServerParam('SERVER_NAME').$request->getServerParam('PHP_SELF');
-            $img_url = uploadImage($post['img_url'], $upload_url);
-            $patient->img_url = $img_url;
+            // $upload_url = 'http://'.$request->getServerParam('SERVER_NAME').$request->getServerParam('PHP_SELF');
+            // $img_url = uploadImage($post['img_url'], $upload_url);
+            // $patient->img_url = $img_url;
 
             if($patient->save()) {
                 return $response
