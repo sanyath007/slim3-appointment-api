@@ -115,23 +115,35 @@ class AppointmentController extends Controller
     {
         $type = $args['type'] == 0 ? false : true;
 
-        $sql = "SELECT appoint_date, COUNT(id) AS num
-                FROM appointments ";
-        
-        if ($type) {
-            $sql .= "WHERE (appoint_type='" .$args['type']. "')";
-        }
+        $appointments = DB::table('appointments')
+                            ->select('appoint_date', DB::raw('COUNT(id) AS num'))
+                            ->where('clinic', $args['clinic'])
+                            ->when($type, function($q) use ($args) {
+                                $q->where('appoint_type', $args['type']);
+                            })
+                            ->groupBy('appoint_date')
+                            ->orderBy('appoint_date')
+                            ->get();
 
-        $sql .= "AND (clinic='" .$args['clinic']. "')";
-        
-        $sql .= "GROUP BY appoint_date ORDER BY appoint_date ";
+        $postponements = DB::table('postponements')
+                            ->select('postponements.old_date', DB::raw('count(postponements.id) as amt'))
+                            ->join('appointments', 'appointments.id', '=', 'postponements.appoint_id')
+                            ->where('appointments.clinic', $args['clinic'])
+                            ->when($type, function($q) use ($args) {
+                                $q->where('appointments.appoint_type', $args['type']);
+                            })
+                            ->groupBy('postponements.old_date')
+                            ->orderBy('postponements.old_date')
+                            ->get();
 
-        $appointments = DB::select($sql);
-        $data = json_encode($appointments, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
+        $data = [
+            'appointments'  => $appointments,
+            'postponements' => $postponements
+        ];
 
         return $response->withStatus(200)
                 ->withHeader("Content-Type", "application/json")
-                ->write($data);
+                ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
     }
 
     public function getInitForm($request, $response, $args)
@@ -464,8 +476,9 @@ class AppointmentController extends Controller
         try {
             $post = (array)$request->getParsedBody();
 
+            $old = Appointment::find($args['id']);
+
             $appointment = Appointment::find($args['id']);
-            $old = $appointment;
             $appointment->appoint_date = thdateToDbdate($post['appoint_date']);
 
             if($appointment->save()) {
