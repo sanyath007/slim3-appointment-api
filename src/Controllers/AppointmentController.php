@@ -775,12 +775,13 @@ class AppointmentController extends Controller
                 APP_ROOT_DIR . '/public/assets/fonts',
             ]),
             'fontdata' => $fontData + [
-                    'sarabun' => [
-                        'R' => 'THSarabunNew.ttf',
-                        'I' => 'THSarabunNew Italic.ttf',
-                        'B' => 'THSarabunNew Bold.ttf',
-                    ]
-                ],
+                'sarabun' => [
+                    'R' => 'THSarabunNew.ttf',
+                    'I' => 'THSarabunNew Italic.ttf',
+                    'B' => 'THSarabunNew Bold.ttf',
+                ]
+            ],
+            'tempDir' => APP_ROOT_DIR . '/public/temp'
         ]);
 
         $mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
