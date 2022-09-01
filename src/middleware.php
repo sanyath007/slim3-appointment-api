@@ -140,6 +140,10 @@ $container['PostponementController'] = function($c) {
     return new App\Controllers\PostponementController($c);
 };
 
+$container['HospcodeController'] = function($c) {
+    return new App\Controllers\HospcodeController($c);
+};
+
 /** 
  * ============================================================
  * JWT middleware
