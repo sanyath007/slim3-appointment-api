@@ -93,3 +93,56 @@ function dbDateToThDate($dbDate)
 
     return $arrDate[2]. '/' .$arrDate[1]. '/' .((int)$arrDate[0] + 543);
 }
+
+const MONTH_LONG_NAMES = [
+    '01' => 'มกราคม',
+    '02' => 'กุมภาพันธ์',
+    '03' => 'มีนาคม',
+    '04' => 'เมษายน',
+    '05' => 'พฤษภาคม',
+    '06' => 'มิถุนายน',
+    '07' => 'กรกฎาคม',
+    '08' => 'สิงหาคม',
+    '09' => 'กันยายน',
+    '10' => 'ตุลาคม',
+    '11' => 'พฤศจิกายน',
+    '12' => 'ธันวาคม',
+];
+
+const MONTH_SHORT_NAMES = [
+    '01' => 'ม.ค.',
+    '02' => 'ก.พ.',
+    '03' => 'มี.ค.',
+    '04' => 'เม.ย',
+    '05' => 'พ.ค.',
+    '06' => 'มิ.ย.',
+    '07' => 'ก.ค.',
+    '08' => 'ส.ค.',
+    '09' => 'ก.ย.',
+    '10' => 'ต.ค.',
+    '11' => 'พ.ย.',
+    '12' => 'ธ.ค.',
+];
+
+function getShortMonth($monthDigits)
+{
+    return MONTH_SHORT_NAMES[$monthDigits];
+}
+
+function convDbDateToLongThDate($dbDate)
+{
+    if(empty($dbDate)) return '';
+
+    $arrDate = explode('-', $dbDate);
+
+    return (int)$arrDate[2]. ' ' .MONTH_LONG_NAMES[$arrDate[1]]. ' ' .((int)$arrDate[0] + 543);
+}
+
+function convDbDateToLongThMonth($dbDate)
+{
+    if(empty($dbDate)) return '';
+
+    $arrDate = explode('-', $dbDate);
+
+    return MONTH_LONG_NAMES[$arrDate[1]]. ' ' .((int)$arrDate[0] + 543);
+}

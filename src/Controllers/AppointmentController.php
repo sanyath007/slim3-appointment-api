@@ -566,13 +566,13 @@ class AppointmentController extends Controller
                 <div class="content">
                     <div class="left__content-container">
                         <div class="left__content-patient">
-                            <p>เลขที่บัตรประชาชน <span>' .$appointment['relations']['patient']->cid. '</span></p>
-                            <p>ชื่อ-สกุล <span>
+                            <p>เลขที่บัตรประชาชน <span class="text-bold-18">' .$appointment['relations']['patient']->cid. '</span></p>
+                            <p>ชื่อ-สกุล <span class="text-bold-18">
                                 ' .$appointment['relations']['patient']->pname.$appointment['relations']['patient']->fname. ' '.$appointment['relations']['patient']->lname. '
                             </span></p>
                             <p>โทรศัพท์ <span>' .$appointment['relations']['patient']->tel1. '</span></p>
                             <p>สิทธิการรักษา <span>' .$appointment['relations']['right']->right_name. '</span></p>
-                            <p>การวินิจฉัย <span>' .$appointment->diag_text. '</span></p>
+                            <p>การวินิจฉัย <span class="text-bold-18">' .$appointment->diag_text. '</span></p>
                             <p>อาการเพิ่มเติม</p>
                             <div class="symptom">
                                 ' .$appointment->symptom. '
@@ -581,11 +581,11 @@ class AppointmentController extends Controller
                     </div>
                     <div class="right__content-container">
                         <div class="right__content-appoint">
-                            <p>วันนัด <span>' .dbDateToThDate($appointment->appoint_date). '</span></p>
-                            <p>เวลา <span>' .$appointTime. '</span></p>
+                            <p>วันที่ตรวจ <span class="text-bold-18">' .convDbDateToLongThDate($appointment->appoint_date). '</span></p>
+                            <p>ช่วงเวลา <span>' .$appointTime. '</span></p>
                         </div>
                         <div class="right__content-clinic">
-                            <p>ยื่นใบนัดที่ <span>' .$appointment['relations']['clinic']['relations']['room']->room_name. '</span></p>
+                            <p>ยื่นใบนัดตรวจที่ <span>' .$appointment['relations']['clinic']['relations']['room']->room_name. '</span></p>
                             <p><span>' .$building. '</span></p>
                             <p>หมายเลขโทรศัพท์ <span>' .$appointment['relations']['clinic']['relations']['room']->room_tel1. '</span></p>
                         </div>
@@ -604,13 +604,14 @@ class AppointmentController extends Controller
                 <div class="footer">
                     <div class="footer-content">
                         <div class="process">
-                            <p>ขั้นตอนการรับบริการ</p>
+                            <p>ขั้นตอนการรับบริการผูป่วยใหม่</p>
                             <ul>
-                                <li>1. ยื่นใบนัด / ใบส่งตัว (ออกจากระบบ R9Refer เท่านั้น) <span class="text-underline">ที่' .$appointment['relations']['clinic']['relations']['room']->room_name. '</span></li>
+                                <li>1. ยื่นใบนัด / ลงทะเบียนเปิดบัตรผู้ป่วยนอก ที่จุดลงทะเบียน <span class="text-underline">' .$appointment['relations']['clinic']['relations']['room']->room_name. '</span></li>
                                 <li>2. ชั่งน้ำหนัก วัดความดันโลหิต</li>
-                                <li>3. รอพยาบาลเรียกซักประวัติ</li>
-                                <li>4. พบแพทย์</li>
-                                <li>5. พบพยาบาลหลังตรวจ รับใบสั่งยา และ / หรือ ใบนัดครั้งต่อไป</li>
+                                <li>3. รอพยาบาลเรียกซักประวัติคัดกรองอาการ</li>
+                                <li>4. รอพบแพทย์</li>
+                                <li>5. พบพยาบาลหลังตรวจ เพื่อรับใบสั่งยา และ / หรือ ใบนัดครั้งต่อไป</li>
+                                <li>6. รอรับยาที่ห้องจ่ายยา</li>
                             </ul>
                         </div>
                     </div>
