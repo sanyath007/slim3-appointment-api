@@ -12,4 +12,9 @@ class User extends Model
     {
         return $this->hasMany(UserPermission::class, 'user_id', 'id');
     }
+
+    public function hosp()
+    {
+        return $this->belongsTo(Hospcode::class, 'hospcode', 'hospcode');
+    }
 }

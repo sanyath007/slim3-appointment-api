@@ -597,7 +597,7 @@ class AppointmentController extends Controller
                     </div>
                     <div class="bottom-content">
                         <p>สถานพยาบาลออกใบส่งตัว <span>' .$appointment['relations']['hosp']->name. '</span></p>
-                        <p>โทรศัพท์ <span>044395000 ต่อ 2510</span></p>
+                        <p>โทรศัพท์ <span>'.$appointment['relations']['hosp']->hospital_phone.'</span></p>
                         <p>หมายเหตุ : <span>กรณีไม่สามารถมาตามนัดได้ หรือต้องการเลื่อนนัด ให้ติดต่อที่โรงพยาบาลที่ออกใบนัด</span></p>
                     </div>
                 </div>
