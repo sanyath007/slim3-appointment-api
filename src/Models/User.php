@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
 {
+    protected $hidden = [
+        'password'
+    ];
+
     protected $table = "users";
 
     public function permissions()

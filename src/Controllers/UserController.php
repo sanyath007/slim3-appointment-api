@@ -32,41 +32,55 @@ class UserController extends Controller
 
     public function store($request, $response, $args)
     {
-        $parsedBody = $request->getParsedBody();
-        var_dump($parsedBody);
+        try {
+            $parsedBody = $request->getParsedBody();
+            var_dump($parsedBody);
 
-        $uploadedFiles = $request->getUploadedFiles();
-        var_dump($uploadedFiles);
+            $uploadedFiles = $request->getUploadedFiles();
+            var_dump($uploadedFiles);
 
-        // $user = User::find($args['id']);
+            // $user = new User;
+        } catch (\Exception $ex) {
+            $data = json_encode(['message' => $ex->getMessage()], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
+
+            return $response->withStatus(500)
+                            ->withHeader("Content-Type", "application/json")
+                            ->write($data);
+        }
     }
 
     public function update($request, $response, $args)
     {
         try {
             $parsedBody = getParsedPutBody($request);
-            var_dump($parsedBody);
-    
-            var_dump($_FILES);
-    
-            $uploadDir = APP_ROOT_DIR . 'uploads/avatars/';
-    
-            foreach($_FILES as $file) {
-                $target_file = $uploadDir . basename($file['name']);
 
-                /** Write file to root directory */
-                // if (file_put_contents($filename, $body)) {
+            /** ================ Upload file section ================ */
+            // $uploadDir = APP_PUBLIC_DIR . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'avatars';
 
-                // }
+            // foreach($_FILES as $file) {
+            //     $target_file = $uploadDir . DIRECTORY_SEPARATOR . basename($file['name']);
 
-                // if (move_uploaded_file($file['tmp_name'], $target_file)) {
-                //     echo 'Success'
-                // }
-            }
-    
-            // $user = User::find($args['id']);
+            //     if(file_exists($file['tmp_name'])) {
+            //         if (copy($file['tmp_name'], $target_file)) {
+            //             echo 'Success';
+            //         }
+            //     }
+            // }
+            /** ================ Upload file section ================ */
+
+            $user = User::find($args['id']);
+
+            $data = json_encode($user, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
+
+            return $response->withStatus(200)
+                            ->withHeader("Content-Type", "application/json")
+                            ->write($data);
         } catch (\Exception $ex) {
-            throw $ex;
+            $data = json_encode(['message' => $ex->getMessage()], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
+
+            return $response->withStatus(500)
+                            ->withHeader("Content-Type", "application/json")
+                            ->write($data);
         }
     }
 }

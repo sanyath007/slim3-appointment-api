@@ -204,6 +204,9 @@ function getParsedPutBody($request)
                     $file_path = pathinfo($filename);
                     $tmp_name = tempnam(ini_get('upload_tmp_dir'), $file_path["filename"]);
 
+                    //place in temporary directory
+                    file_put_contents($tmp_name, $body);
+
                     $_FILES[$name] = [
                         'tmp_name'  => $tmp_name,
                         'name'      => $filename,

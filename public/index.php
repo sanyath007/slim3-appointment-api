@@ -1,6 +1,7 @@
 <?php
 
 define('APP_ROOT_DIR', __DIR__ . '/../');
+define('APP_PUBLIC_DIR', __DIR__);
 
 require APP_ROOT_DIR . 'vendor/autoload.php';
 
