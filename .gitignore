@@ -1,6 +1,7 @@
 logs
 vendor
 public/downloads/*
+public/uploads
 public/temp
 .env
 .env.prod

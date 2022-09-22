@@ -12,7 +12,10 @@ $app->post('/login', 'LoginController:login')->setName('login');
 
 $app->group('/api', function(Slim\App $app) {
     $app->get('/users', 'UserController:getAll');
-    $app->get('/users/{username}', 'UserController:getUser');
+    $app->get('/users/{id}', 'UserController:getById');
+    $app->post('/users', 'UserController:store');
+    $app->put('/users/{id}', 'UserController:update');
+    $app->delete('/users/{id}', 'UserController:delete');
 
     $app->get('/appointments', 'AppointmentController:getAll');
     $app->get('/appointments/{id}', 'AppointmentController:getById');
