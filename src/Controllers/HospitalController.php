@@ -5,6 +5,9 @@ namespace App\Controllers;
 use App\Controllers\Controller;
 use Illuminate\Database\Capsule\Manager as DB;
 use App\Models\Hospital;
+use App\Models\Changwat;
+use App\Models\Amphur;
+use App\Models\Tambon;
 
 class HospitalController extends Controller
 {
@@ -46,5 +49,18 @@ class HospitalController extends Controller
         return $response->withStatus(200)
                 ->withHeader("Content-Type", "application/json")
                 ->write($data);
+    }
+
+    public function getInitForm($request, $response, $args)
+    {
+        $data = [
+            'changwats'     => Changwat::all(),
+            'amphurs'       => Amphur::all(),
+            'tambons'       => Tambon::all(),
+        ];
+
+        return $response->withStatus(200)
+                ->withHeader("Content-Type", "application/json")
+                ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
     }
 }
