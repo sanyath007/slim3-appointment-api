@@ -33,8 +33,8 @@ $app->group('/api', function(Slim\App $app) {
     $app->get('/postponements/{id}', 'PostponementController:getById');
     $app->get('/postponements/{appointId}/appointment', 'PostponementController:getByAppoint');
 
-    $app->get('/hospcodes', 'HospcodeController:getAll');
-    $app->get('/hospcodes/{id}', 'HospcodeController:getById');
+    $app->get('/hospitals', 'HospitalController:getAll');
+    $app->get('/hospitals/{id}', 'HospitalController:getById');
 
     $app->get('/patients', 'PatientController:getAll');
     $app->get('/patients/{id}', 'PatientController:getById');

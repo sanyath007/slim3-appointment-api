@@ -6,7 +6,7 @@ use App\Controllers\Controller;
 use Illuminate\Database\Capsule\Manager as DB;
 use App\Models\Hospcode;
 
-class HospcodeController extends Controller
+class HospitalController extends Controller
 {
     public function getAll($request, $response, $args)
     {

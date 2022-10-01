@@ -140,8 +140,8 @@ $container['PostponementController'] = function($c) {
     return new App\Controllers\PostponementController($c);
 };
 
-$container['HospcodeController'] = function($c) {
-    return new App\Controllers\HospcodeController($c);
+$container['HospitalController'] = function($c) {
+    return new App\Controllers\HospitalController($c);
 };
 
 /** 
