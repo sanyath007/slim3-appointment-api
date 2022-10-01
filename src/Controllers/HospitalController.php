@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\Controller;
 use Illuminate\Database\Capsule\Manager as DB;
-use App\Models\Hospcode;
+use App\Models\Hospital;
 
 class HospitalController extends Controller
 {
@@ -14,7 +14,11 @@ class HospitalController extends Controller
         $amphur     = empty($request->getParam('amphur')) ? '01' : $request->getParam('amphur');
         $type       = $request->getParam('type');
 
-        $hospcodes = Hospcode::where('chwpart', $changwat)
+        $hospitals = Hospital::with('changwat')
+                        ->with(['amphur' => function($query) use ($changwat) {
+                            $query->where('chw_id', $changwat);
+                        }])
+                        ->where('chwpart', $changwat)
                         ->where('amppart', $amphur)
                         ->when(empty($type), function($q) {
                             $q->whereIn('hospital_type_id', [2, 3, 7]);
@@ -24,7 +28,7 @@ class HospitalController extends Controller
                         })
                         ->get(['hospcode', 'name', 'hosptype', 'amppart', 'chwpart']);
         
-        $data = json_encode($hospcodes, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
+        $data = json_encode($hospitals, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
 
         return $response->withStatus(200)
                 ->withHeader("Content-Type", "application/json")
@@ -33,11 +37,11 @@ class HospitalController extends Controller
     
     public function getById($request, $response, $args)
     {
-        $hospcode = Hospcode::where('hospcode', $args['id'])
+        $hospital = Hospital::where('hospcode', $args['id'])
                     ->get(['hospcode', 'name', 'hosptype', 'amppart', 'chwpart'])
                     ->first();
                     
-        $data = json_encode($hospcode, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
+        $data = json_encode($hospital, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
 
         return $response->withStatus(200)
                 ->withHeader("Content-Type", "application/json")
