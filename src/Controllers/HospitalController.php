@@ -21,12 +21,12 @@ class HospitalController extends Controller
                         ->where('chwpart', $changwat)
                         ->where('amppart', $amphur)
                         ->when(empty($type), function($q) {
-                            $q->whereIn('hospital_type_id', [2, 3, 7]);
+                            $q->whereIn('hospital_type_id', [3,5,7,9]);
                         })
                         ->when(!empty($type), function($q) use ($type) {
                             $q->where('hospital_type_id', $type);
                         })
-                        ->get(['hospcode', 'name', 'hosptype', 'amppart', 'chwpart']);
+                        ->get(['hospcode','name','hosptype','hospital_type_id','amppart','chwpart','hospital_phone']);
         
         $data = json_encode($hospitals, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
 
@@ -38,7 +38,7 @@ class HospitalController extends Controller
     public function getById($request, $response, $args)
     {
         $hospital = Hospital::where('hospcode', $args['id'])
-                    ->get(['hospcode', 'name', 'hosptype', 'amppart', 'chwpart'])
+                    ->get(['hospcode','name','hosptype','hospital_type_id','amppart','chwpart','hospital_phone'])
                     ->first();
                     
         $data = json_encode($hospital, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
