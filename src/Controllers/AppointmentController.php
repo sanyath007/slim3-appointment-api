@@ -560,7 +560,7 @@ class AppointmentController extends Controller
                     </div>
                     <div class="header-text">
                         <h1>ใบนัดตรวจ</h1>
-                        <h1>(' .$appointment['relations']['clinic']->clinic_name. ')</h1>
+                        <h2>(' .$appointment['relations']['clinic']->clinic_name. ')</h2>
                         <h2>โรงพยาบาลมหาราชนครราชสีมา</h2>
                     </div>
                 </div>
@@ -605,13 +605,12 @@ class AppointmentController extends Controller
                 <div class="footer">
                     <div class="footer-content">
                         <div class="process">
-                            <p>ขั้นตอนการรับบริการผูป่วยใหม่</p>
+                            <p class="process-topic">ขั้นตอนการรับบริการผูป่วยใหม่</p>
                             <ul>
-                                <li>
-                                    <p>1. ยื่นใบนัด ที่จุดลงทะเบียน</p>
-                                    <p><span>กรณีผู้ป่วยใหม่<span> (ไม่มีเลขบัตรประจำตัวผู้ป่วยนอก HN)</p>
+                                <li>1. ยื่นใบนัด ที่จุดลงทะเบียน
+                                    <p><span class="text-underline">กรณีผู้ป่วยใหม่<span> (ไม่มีเลขบัตรประจำตัวผู้ป่วยนอก HN)</p>
                                     <p>- ยื่นใบนัดที่จุดคัดกรอง เพื่อเปิดบัตรประจำตัวผู้ป่วยนอก ที่ห้องเวชระเบียน ชั้น 1 อาคารผู้ป่วยนอกและอำนวยการ</p>
-                                    <p><span>กรณีผู้ป่วยเก่า<span> (มีเลขบัตรประจำตัวผู้ป่วยนอก HN)</p>
+                                    <p><span class="text-underline">กรณีผู้ป่วยเก่า<span> (มีเลขบัตรประจำตัวผู้ป่วยนอก HN)</p>
                                     <p>- ยื่นใบนัดที่จุดลงทะเบียนของแต่ละคลินิก</p>
                                 </li>
                                 <li>2. เสียบบัตรประจำตัวประชาชนที่ตู้ออกคิวอัตโนมัติ</li>

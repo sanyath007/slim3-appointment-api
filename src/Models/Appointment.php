@@ -45,6 +45,6 @@ class Appointment extends Model
 
     public function hosp()
     {
-        return $this->belongsTo(Hospcode::class, 'hospcode', 'hospcode');
+        return $this->belongsTo(Hospital::class, 'hospcode', 'hospcode');
     }
 }

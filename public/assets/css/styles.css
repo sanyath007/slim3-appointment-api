@@ -1,6 +1,7 @@
 .container {
   font-family: "sarabun";
   font-size: 16pt;
+  line-height: 24px;
   width: 100%;
   background-image: url("assets/img/print_bg.png");
   background-repeat: repeat;
@@ -20,10 +21,10 @@
   float: right;
 }
 .header-text h1,
-h2,
-h3,
-h4 {
-  margin: 0;
+.header-text h2,
+.header-text h3,
+.header-text h4 {
+  margin: 5px 0;
 }
 .content {
   display: flex;
@@ -104,7 +105,7 @@ h4 {
   border: 1px dotted grey;
   padding: 10px;
 }
-.process p {
+.process .process-topic {
   font-weight: bold;
   margin: 2px;
 }
@@ -114,6 +115,10 @@ h4 {
   list-style: none;
 }
 .process ul li {
+  margin: 0;
+  padding-left: 10px;
+}
+.process ul li p {
   margin: 0;
   padding-left: 10px;
 }
@@ -147,9 +152,6 @@ h4 {
 p span {
   margin-left: 10px;
   font-weight: normal;
-}
-p {
-  text-align: justify;
 }
 h1 {
   text-align: center;
