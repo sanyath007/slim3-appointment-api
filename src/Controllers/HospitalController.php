@@ -34,10 +34,10 @@ class HospitalController extends Controller
         $data = json_encode($hospitals, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
 
         return $response->withStatus(200)
-                ->withHeader("Content-Type", "application/json")
-                ->write($data);
+                        ->withHeader("Content-Type", "application/json")
+                        ->write($data);
     }
-    
+
     public function getById($request, $response, $args)
     {
         $hospital = Hospital::where('hospcode', $args['id'])
@@ -51,8 +51,8 @@ class HospitalController extends Controller
         $data = json_encode($hospital, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
 
         return $response->withStatus(200)
-                ->withHeader("Content-Type", "application/json")
-                ->write($data);
+                        ->withHeader("Content-Type", "application/json")
+                        ->write($data);
     }
 
     public function getInitForm($request, $response, $args)
@@ -64,7 +64,52 @@ class HospitalController extends Controller
         ];
 
         return $response->withStatus(200)
-                ->withHeader("Content-Type", "application/json")
-                ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+                        ->withHeader("Content-Type", "application/json")
+                        ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+    }
+
+    public function update($request, $response, $args)
+    {
+        try {
+            $post = (array)$request->getParsedBody();
+
+            $hospital = Hospital::where('hospcode', $args['id'])->first();
+            $hospital->hospcode         = $post['hospcode'];
+            $hospital->name             = $post['name'];
+            $hospital->addrpart         = $post['addrpart'];
+            $hospital->moopart          = $post['moopart'];
+            $hospital->tmbpart          = $post['tmbpart'];
+            $hospital->amppart          = $post['amppart'];
+            $hospital->chwpart          = $post['chwpart'];
+            $hospital->hospital_type_id = $post['hospital_type_id'];
+            $hospital->hospital_phone   = $post['hospital_phone'];
+            $hospital->hospital_fax     = $post['hospital_fax'];
+            $hospital->area_code        = $post['area_code'];
+            // $hospital->province_name    = $post['province_name'];
+
+            if ($hospital->save()) {
+                return $response->withStatus(200)
+                                ->withHeader("Content-Type", "application/json")
+                                ->write(json_encode([
+                                    'status'    => 1,
+                                    'message'   => 'Success',
+                                    'hospital'  => $hospital
+                                ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            } else {
+                return $response->withStatus(500)
+                                ->withHeader("Content-Type", "application/json")
+                                ->write(json_encode([
+                                    'status'    => 0,
+                                    'message'   => 'Failure',
+                                ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            }
+        } catch (\Exception $ex) {
+            return $response->withStatus(500)
+                            ->withHeader("Content-Type", "application/json")
+                            ->write(json_encode([
+                                'status'    => 0,
+                                'message'   => $ex->getMessage(),
+                            ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+        }
     }
 }

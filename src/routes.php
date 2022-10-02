@@ -36,6 +36,9 @@ $app->group('/api', function(Slim\App $app) {
     $app->get('/hospitals', 'HospitalController:getAll');
     $app->get('/hospitals/{id}', 'HospitalController:getById');
     $app->get('/hospitals/init/form', 'HospitalController:getInitForm');
+    $app->post('/hospitals', 'HospitalController:store');
+    $app->put('/hospitals/{id}', 'HospitalController:update');
+    $app->delete('/hospitals/{id}', 'HospitalController:delete');
 
     $app->get('/patients', 'PatientController:getAll');
     $app->get('/patients/{id}', 'PatientController:getById');
