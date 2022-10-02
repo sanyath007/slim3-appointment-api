@@ -41,7 +41,11 @@ class HospitalController extends Controller
     public function getById($request, $response, $args)
     {
         $hospital = Hospital::where('hospcode', $args['id'])
-                    ->get(['hospcode','name','hosptype','hospital_type_id','amppart','chwpart','hospital_phone'])
+                    ->get([
+                        'hospcode','name','addrpart','moopart','tmbpart','amppart','chwpart',
+                        'hosptype','hospital_type_id','hospital_phone','hospital_fax','area_code',
+                        'province_name'
+                    ])
                     ->first();
                     
         $data = json_encode($hospital, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
