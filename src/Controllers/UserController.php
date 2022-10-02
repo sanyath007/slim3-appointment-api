@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\Controller;
 use Illuminate\Database\Capsule\Manager as DB;
 use App\Models\User;
+use App\Models\UserPermission;
 
 class UserController extends Controller
 {
@@ -33,19 +34,46 @@ class UserController extends Controller
     public function store($request, $response, $args)
     {
         try {
-            $parsedBody = $request->getParsedBody();
-            var_dump($parsedBody);
+            $post = $request->getParsedBody();
+            // $uploadedFiles = $request->getUploadedFiles();
+            // var_dump($uploadedFiles);
 
-            $uploadedFiles = $request->getUploadedFiles();
-            var_dump($uploadedFiles);
+            $user = new User;
+            $user->fullname     = $post['fullname'];
+            $user->email        = $post['email'];
+            $user->username     = $post['username'];
+            $user->password     = password_hash($post['password'], PASSWORD_BCRYPT, ['cost' => 12]);
+            $user->hospcode     = $post['hospcode'];
+            // $user->position     = $post['position'];
 
-            // $user = new User;
+            if ($user->save()) {
+                $permission = new UserPermission;
+                $permission->user_id    = $user->id;
+                $permission->role       = $post['position'];
+                $permission->save();
+
+                return $response->withStatus(200)
+                            ->withHeader("Content-Type", "application/json")
+                            ->write(json_encode([
+                                'status'    => 1,
+                                'message'   => 'Success',
+                                'user'      => $user
+                            ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            } else {
+                return $response->withStatus(500)
+                            ->withHeader("Content-Type", "application/json")
+                            ->write(json_encode([
+                                'status'    => 0,
+                                'message'   => 'Failure'
+                            ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
+            }
         } catch (\Exception $ex) {
-            $data = json_encode(['message' => $ex->getMessage()], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE);
-
             return $response->withStatus(500)
                             ->withHeader("Content-Type", "application/json")
-                            ->write($data);
+                            ->write(json_encode([
+                                'status'    => 0,
+                                'message' => $ex->getMessage()
+                            ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT |  JSON_UNESCAPED_UNICODE));
         }
     }
 
