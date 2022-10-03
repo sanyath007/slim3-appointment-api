@@ -24,7 +24,7 @@ class HospitalController extends Controller
                         ->where('chwpart', $changwat)
                         ->where('amppart', $amphur)
                         ->when(empty($type), function($q) {
-                            $q->whereIn('hospital_type_id', [3,5,7,9]);
+                            $q->whereIn('hospital_type_id', [3,5,7,9,13]);
                         })
                         ->when(!empty($type), function($q) use ($type) {
                             $q->where('hospital_type_id', $type);
