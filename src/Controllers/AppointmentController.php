@@ -559,7 +559,7 @@ class AppointmentController extends Controller
                         <img src="assets/img/logo_mnrh_512x512.jpg" width="100%" height="100" />
                     </div>
                     <div class="header-text">
-                        <h1>ใบนัดตรวจ</h1>
+                        <h1>ใบนัดตรวจจากระบบอนนไลน์</h1>
                         <h2>(' .$appointment['relations']['clinic']->clinic_name. ')</h2>
                         <h2>โรงพยาบาลมหาราชนครราชสีมา</h2>
                     </div>
@@ -605,7 +605,7 @@ class AppointmentController extends Controller
                 <div class="footer">
                     <div class="footer-content">
                         <div class="process">
-                            <p class="process-topic">ขั้นตอนการรับบริการผูป่วยใหม่</p>
+                            <p class="process-topic">ขั้นตอนการรับบริการ</p>
                             <ul>
                                 <li>1. ยื่นใบนัด ที่จุดลงทะเบียน
                                     <p><span class="text-underline">กรณีผู้ป่วยใหม่<span> (ไม่มีเลขบัตรประจำตัวผู้ป่วยนอก HN)</p>
@@ -620,6 +620,7 @@ class AppointmentController extends Controller
                                 <li>6. รอพบแพทย์</li>
                                 <li>7. พบพยาบาลหลังตรวจ เพื่อรับใบสั่งยา และ / หรือ ใบนัดครั้งต่อไป</li>
                                 <li>8. รอรับยาที่ห้องจ่ายยา</li>
+                                <li><b>หมายเหตุ</b> : หากไปไม่ตรงนัด ต้องไปรับบัตรนัดใหม่ที่ รพ.สต./ศูนย์แพทย์ชุมชนที่ออกใบนัด</li>
                             </ul>
                         </div>
                     </div>
