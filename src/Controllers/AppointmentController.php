@@ -559,7 +559,7 @@ class AppointmentController extends Controller
                         <img src="assets/img/logo_mnrh_512x512.jpg" width="100%" height="100" />
                     </div>
                     <div class="header-text">
-                        <h1>ใบนัดตรวจจากระบบอนนไลน์</h1>
+                        <h1>ใบนัดตรวจจากระบบออนไลน์</h1>
                         <h2>(' .$appointment['relations']['clinic']->clinic_name. ')</h2>
                         <h2>โรงพยาบาลมหาราชนครราชสีมา</h2>
                     </div>
