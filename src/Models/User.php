@@ -17,7 +17,7 @@ class User extends Model
         return $this->hasMany(UserPermission::class, 'user_id', 'id');
     }
 
-    public function hosp()
+    public function hospital()
     {
         return $this->belongsTo(Hospital::class, 'hospcode', 'hospcode');
     }
